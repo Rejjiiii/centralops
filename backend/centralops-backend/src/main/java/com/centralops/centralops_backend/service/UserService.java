@@ -22,7 +22,7 @@ public class UserService {
         return repo.save(user);
     }
 
-    public User getUserById(Long empId) {
+    public User getUserById(String empId) {
         return repo.findById(empId)
                 .orElseThrow(() -> new RuntimeException("User not found with empId " + empId));
     }
