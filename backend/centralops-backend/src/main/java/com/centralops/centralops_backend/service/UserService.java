@@ -21,4 +21,9 @@ public class UserService {
     public User saveUser(User user) {
         return repo.save(user);
     }
+
+    public User getUserById(Long empId) {
+        return repo.findById(empId)
+                .orElseThrow(() -> new RuntimeException("User not found with empId " + empId));
+    }
 }

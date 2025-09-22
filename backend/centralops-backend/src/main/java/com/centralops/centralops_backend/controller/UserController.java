@@ -25,4 +25,9 @@ public class UserController {
     public User create(@RequestBody User user) {
         return service.saveUser(user);
     }
+
+    @GetMapping("/{empId}")
+    public User getUserById(@PathVariable Long empId) {
+        return service.getUserById(empId);
+    }
 }
