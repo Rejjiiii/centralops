@@ -35,25 +35,8 @@
             <div class="p-8">
                 <div class="text-center mb-8">
                     <h1 class="text-3xl font-bold text-white mb-2">Welcome Back</h1>
-                    <p class="text-white/80">Authenticate with your image</p>
                 </div>
-
-                <!-- Image Upload Section -->
                 <div class="mb-6">
-                    <div id="imageUpload"
-                        class="image-upload-container border-2 border-dashed border-white/30 rounded-xl p-6 text-center cursor-pointer hover:border-white/50 transition-colors">
-                        <div class="flex flex-col items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white mb-3 pulse" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <p class="text-white font-medium">Click to upload your image</p>
-                            <p class="text-white/60 text-sm mt-1">Or drag and drop</p>
-                        </div>
-                        <input type="file" id="fileInput" class="hidden" accept="image/*" />
-                    </div>
-
                     <div id="imagePreviewContainer" class="hidden mt-4 flex justify-center">
                         <div class="relative">
                             <img id="imagePreview"
@@ -74,11 +57,11 @@
                 <!-- Additional Fields -->
                 <div class="space-y-4">
                     <div class="relative">
-                        <input type="text"
+                        <input type="text" id="username"
                             class="w-full bg-white/20 text-white placeholder-white/50 rounded-lg py-3 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/30 transition"
                             placeholder="Username">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white/70" fill="none"
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray/40" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -87,11 +70,11 @@
                     </div>
 
                     <div class="relative">
-                        <input type="password"
+                        <input type="password" id="password"
                             class="w-full bg-white/20 text-white placeholder-white/50 rounded-lg py-3 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/30 transition"
                             placeholder="Password">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white/70" fill="none"
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray/70" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -101,8 +84,10 @@
                 </div>
 
                 <button
-                    class="w-full mt-6 bg-white text-indigo-600 py-3 px-4 rounded-lg font-semibold hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-500 transition-all transform hover:scale-105 active:scale-95">
-                    Authenticate
+                    class="w-full mt-6 bg-white text-indigo-600 py-3 px-4 rounded-lg font-semibold hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-500 transition-all transform hover:scale-105 active:scale-95"
+                    type="button"
+                    id="loginBtn">
+                    Login
                 </button>
 
                 <div class="mt-4 text-center">
@@ -117,8 +102,12 @@
         </div>
     </div>
 
-    <!-- Custom JS -->
-    <script src="${pageContext.request.contextPath}/resources/js/custom.js"></script>
+    
 </body>
+<!-- Custom JS -->
+ <script>
+    const appContext = "${pageContext.request.contextPath}";
+</script>
+<script src="${pageContext.request.contextPath}/resources/js/login.js"></script>
 
 </html>
