@@ -2,12 +2,14 @@ package com.centralops.centralops_backend.controller;
 
 import java.util.List;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.centralops.centralops_backend.model.User;
 import com.centralops.centralops_backend.service.UserService;
 
 @RestController
+@Controller
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService service;
