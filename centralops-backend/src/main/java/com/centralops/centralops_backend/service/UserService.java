@@ -76,14 +76,14 @@ public class UserService {
     }
 
     // Authenticate login
-    public Optional<User> authenticate(String username, String rawPassword) {
+    public User authenticate(String username, String rawPassword) {
         Optional<User> userOpt = repo.findByUsername(username);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             if (passwordEncoder.matches(rawPassword, user.getPassword())) {
-                return Optional.of(user);
+                return user;
             }
         }
-        return Optional.empty();
+        return null;
     }
 }
