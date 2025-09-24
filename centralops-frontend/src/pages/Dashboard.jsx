@@ -17,20 +17,20 @@ import { Navbar } from "@/components/Navbar";
 
 export default function Dashboard() {
   const employee = {
-    id: "EMP-00421",
-    name: "Jane Doe",
+    id: "EMP-00069",
+    name: "Jeffree Borlagdan",
     position: "Senior Software Engineer",
     department: "Engineering",
     team: "Platform — Payments",
     manager: "Michael Chen",
     location: "New York, USA",
     office: "HQ — 12F, Desk 72",
-    email: "jane.doe@example.com",
+    email: "jeff.borlagdan@example.com",
     phone: "+1 (555) 123-4567",
     startDate: "2019-08-12",
     employmentType: "Full-time",
     status: "Active",
-    avatar: "https://i.pravatar.cc/150?img=47",
+    avatar: "../src/assets/DP.png",
     skills: ["React", "Node.js", "TypeScript", "AWS", "Postgres"],
     badges: ["On-call", "Security Cleared"],
     emergencyContact: {
@@ -114,16 +114,16 @@ export default function Dashboard() {
   );
 
   return (
-    <div className="bg-background text-foreground">
+    <div className="bg-[#D9E1F1] text-foreground">
       <Navbar />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:grid-rows-4 gap-4 max-w-7xl mx-auto p-4 mt-20">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:grid-rows-4 gap-4 max-w-7xl mx-auto mt-11 ">
         {/* Profile Card (col-1, row-span-3) */}
         <Card className="lg:row-span-3 lg:col-span-1 rounded-2xl shadow-lg h-full flex flex-col">
-          <CardHeader className="flex flex-col items-center p-6">
+          <CardHeader className="flex flex-col items-center p-6 mt-10">
             <img
               src={employee.avatar}
               alt={employee.name}
-              className="w-24 h-24 md:w-28 md:h-28 rounded-full shadow-md border-4 border-white -mt-20"
+              className="w-32 h-32 md:w-36 md:h-36 rounded-full shadow-md border-4 border-white bg-contain"
             />
             <CardTitle className="mt-4 text-lg md:text-xl font-semibold text-center">
               {employee.name}
