@@ -6,9 +6,9 @@ export const loginUser = createAsyncThunk(
   async ({ username, password }, thunkAPI) => {
     try {
       const response = await axios.post(
-        "/api/auth/login", // or '/api/auth/login' with proxy
+        "/api/auth/login", // backend login endpoint
         { username, password },
-        { withCredentials: true } // important for session
+        { withCredentials: true } // keep cookies/session if backend uses them
       );
       return response.data;
     } catch (error) {
@@ -20,8 +20,7 @@ export const loginUser = createAsyncThunk(
 );
 
 const initialState = {
-  user: null,
-  role: null,
+  user: null,          // full employee object
   loading: false,
   error: null,
   isAuthenticated: false,
@@ -33,7 +32,6 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.user = null;
-      state.role = null;
       state.isAuthenticated = false;
       state.error = null;
     },
@@ -46,12 +44,13 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload.success) {
-          state.user = action.payload.empId;
-          state.role = action.payload.roleId;
+
+        // check if backend returned a valid employee object
+        if (action.payload?.empId) {
+          state.user = action.payload; // save the whole employee object
           state.isAuthenticated = true;
         } else {
-          state.error = action.payload.message;
+          state.error = action.payload?.message || "Invalid login response";
         }
       })
       .addCase(loginUser.rejected, (state, action) => {
