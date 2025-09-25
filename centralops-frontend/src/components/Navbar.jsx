@@ -9,6 +9,10 @@ import {
   MenuItems,
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/auth/authSlice"; // ✅ adjust path
+import { persistor } from "../redux/app/store";   // ✅ to clear persisted storage
+import { useNavigate, Link } from "react-router-dom"; // ✅ use Link
 
 const navItems = [
   { name: "Profile", href: "/Dashboard" },
@@ -23,10 +27,20 @@ function classNames(...classes) {
 
 export const Navbar = () => {
   const [currentPath, setCurrentPath] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setCurrentPath(window.location.pathname); // detect current URL
   }, []);
+
+  const handleLogout = () => {
+    dispatch(logout());      // clear Redux auth state
+    persistor.purge();       // clear redux-persist storage
+    sessionStorage.clear();  // ✅ clear session storage (if used)
+    localStorage.clear();    // ✅ clear local storage (if used)
+    navigate("/");           // ✅ redirect to login
+  };
 
   return (
     <Disclosure
@@ -53,18 +67,18 @@ export const Navbar = () => {
           {/* Logo + Desktop Menu */}
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
-              <a href="/Home" className="text-2xl font-bold text-white">
+              <Link to="/" className="text-2xl font-bold text-white">
                 CENTRALOPS
-              </a>
+              </Link>
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
                 {navItems.map((item) => {
                   const isActive = currentPath === item.href;
                   return (
-                    <a
+                    <Link
                       key={item.name}
-                      href={item.href}
+                      to={item.href}
                       aria-current={isActive ? "page" : undefined}
                       className={classNames(
                         isActive
@@ -74,7 +88,7 @@ export const Navbar = () => {
                       )}
                     >
                       {item.name}
-                    </a>
+                    </Link>
                   );
                 })}
               </div>
@@ -103,28 +117,28 @@ export const Navbar = () => {
               </MenuButton>
               <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-gray-800 py-1 outline -outline-offset-1 outline-white/10">
                 <MenuItem>
-                  <a
-                    href="#"
+                  <Link
+                    to="/Dashboard"
                     className="block px-4 py-2 text-sm text-gray-300 data-focus:bg-white/5"
                   >
                     Your profile
-                  </a>
+                  </Link>
                 </MenuItem>
                 <MenuItem>
-                  <a
-                    href="#"
+                  <Link
+                    to="/Settings"
                     className="block px-4 py-2 text-sm text-gray-300 data-focus:bg-white/5"
                   >
                     Settings
-                  </a>
+                  </Link>
                 </MenuItem>
                 <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-300 data-focus:bg-white/5"
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left block px-4 py-2 text-sm text-gray-300 hover:bg-white/5"
                   >
                     Sign out
-                  </a>
+                  </button>
                 </MenuItem>
               </MenuItems>
             </Menu>
@@ -140,8 +154,8 @@ export const Navbar = () => {
             return (
               <DisclosureButton
                 key={item.name}
-                as="a"
-                href={item.href}
+                as={Link}
+                to={item.href}
                 aria-current={isActive ? "page" : undefined}
                 className={classNames(
                   isActive
@@ -154,6 +168,14 @@ export const Navbar = () => {
               </DisclosureButton>
             );
           })}
+          {/* Mobile logout option */}
+          <DisclosureButton
+            as="button"
+            onClick={handleLogout}
+            className="block w-full text-left rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white"
+          >
+            Sign out
+          </DisclosureButton>
         </div>
       </DisclosurePanel>
     </Disclosure>

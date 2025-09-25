@@ -1,11 +1,11 @@
 package com.centralops.centralops_backend.controller;
 
-import com.centralops.centralops_backend.model.User;
-import com.centralops.centralops_backend.service.UserService;
-
 import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
+
+import com.centralops.centralops_backend.model.User;
+import com.centralops.centralops_backend.service.UserService;
 
 @RestController
 @RequestMapping("/api/users")
