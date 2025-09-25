@@ -1,40 +1,33 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProfile } from "../app/authSlice"; // your auth slice
+import { fetchProfile } from "../app/authSlice"; // Redux action to fetch employee profile
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Clock,
-  ClipboardList,
-  Briefcase,
-  Calendar,
-  Trophy,       // instead of Award
-  CheckSquareIcon, // instead of CheckSquare
-} from "lucide-react";
+import {Mail,Phone,MapPin,Clock,ClipboardList,Briefcase,Calendar } from "lucide-react";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
-
 export default function Dashboard() {
   const dispatch = useDispatch();
+
+  //Get employee profile state from Redux store
   const { profile: employee, loading, error } = useSelector(
     (state) => state.auth
   );
 
+  //Fetch profile when component mounts (if not already loaded)
   useEffect(() => {
     if (!employee) {
       dispatch(fetchProfile());
     }
   }, [dispatch, employee]);
 
-  const progressColors = [
-    "bg-green-500",
-    "bg-blue-500",
-    "bg-yellow-500",
-    "bg-red-500",
-  ];
+  //Color palettes for UI (progress bars, badges, etc.)
+  // const progressColors = [
+  //   "bg-green-500",
+  //   "bg-blue-500",
+  //   "bg-yellow-500",
+  //   "bg-red-500",
+  // ];
   const badgeColors = [
     "bg-blue-100 text-blue-700",
     "bg-green-100 text-green-700",
@@ -55,7 +48,7 @@ export default function Dashboard() {
     </Card>
   );
 
-  // ✅ handle loading & error states
+  // handle loading & error states
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen text-gray-500">
@@ -71,7 +64,8 @@ export default function Dashboard() {
       </div>
     );
   }
-
+  
+  
   if (!employee) {
     return (
       <div className="flex items-center justify-center h-screen text-gray-500">
@@ -80,6 +74,7 @@ export default function Dashboard() {
     );
   }
 
+  // Main Dashboard UI
   return (
     <div className="bg-background text-foreground">
       <Navbar />

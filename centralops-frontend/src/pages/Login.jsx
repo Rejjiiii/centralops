@@ -2,26 +2,32 @@ import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../app/authSlice"; // import the login thunk
+import { login } from "../app/userSlice"; // Redux thunk for login
 
 export const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+   // Grab Redux state values 
   const { loading, error } = useSelector((state) => state.auth);
 
+  // Local state for form inputs
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+// Handle submit: call login thunk -> wait for token -> navigate
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // unwrap() -> lets us handle success/error directly
       const result = await dispatch(login({ email, password })).unwrap();
+
+      // If login success → token received → go to dashboard
       if (result.token) {
-        navigate("/dashboard"); // Redirect after login success
+        navigate("/dashboard");
       }
     } catch (err) {
-      console.error("Login failed:", err);
+      console.error("Login failed:", err); // Redux also sets `error`
     }
   };
 
@@ -60,6 +66,7 @@ export const Login = () => {
               </p>
             </div>
 
+            {/* Login Form */}
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
               {/* hook up handleSubmit here */}
               <form onSubmit={handleSubmit} className="space-y-7">
@@ -75,7 +82,7 @@ export const Login = () => {
                       id="email"
                       name="email"
                       type="email"
-                      value={email} // ✅ controlled
+                      value={email} // controlled
                       onChange={(e) => setEmail(e.target.value)} // ✅ update state
                       required
                       autoComplete="email"
@@ -84,6 +91,7 @@ export const Login = () => {
                   </div>
                 </div>
 
+                {/* Password */}
                 <div>
                   <div className="flex items-center justify-between">
                     <label
@@ -98,12 +106,14 @@ export const Login = () => {
                       id="password"
                       name="password"
                       type={showPassword ? "text" : "password"}
-                      value={password} // ✅ controlled
-                      onChange={(e) => setPassword(e.target.value)} // ✅ update state
+                      value={password} // controlled
+                      onChange={(e) => setPassword(e.target.value)} // update state
                       required
                       autoComplete="current-password"
                       className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-black outline-1 placeholder:text-gray-500 focus:outline-2 focus:outline-indigo-500 sm:text-sm"
                     />
+
+                    {/* Show/Hide password */}
                     <button
                       type="button"
                       onClick={() => setShowPassword((prev) => !prev)}
@@ -114,6 +124,7 @@ export const Login = () => {
                   </div>
                 </div>
 
+                {/* Remember me + forgot password */}
                 <div className="flex text-sm justify-between items-center">
                   <div className="flex space-x-2 items-center">
                     <input
@@ -134,7 +145,7 @@ export const Login = () => {
                 <div>
                   <button
                     type="submit"
-                    disabled={loading} // ✅ disable when loading
+                    disabled={loading} //  disable when loading
                     className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-400 disabled:bg-gray-400"
                   >
                     {loading ? "Signing in..." : "Sign in"}
