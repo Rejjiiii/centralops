@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const posInput = document.getElementById("positionName");
   const secInput = document.getElementById("sectionName");
+  const positionLabel = document.getElementById("positionLabel");
 
   const positionId = posInput.value;   // current ID
   const sectionId = secInput.value;    // current ID
@@ -10,7 +11,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       const res = await fetch(`/api/pos/${positionId}`);
       if (res.ok) {
-        posInput.value = await res.text(); // backend returns name string
+        const posName = await res.text();
+        posInput.value = posName;             // update input
+        positionLabel.textContent = posName;  // update label beside picture
       }
     } catch (e) {
       console.error("Failed to fetch position name", e);

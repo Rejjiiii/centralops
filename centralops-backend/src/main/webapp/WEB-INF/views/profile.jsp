@@ -50,7 +50,7 @@
                                 ? currentUser.getImgSrc() 
                                 : request.getContextPath() + "/resources/images/default-avatar.png" %>"
                                 alt="Default Avatar"> -->
-                            
+
                             <!-- Used Defaul Profile  -->
                             <img class="w-40 h-40 rounded-full object-cover"
                                 src="<%= request.getContextPath() %>/resources/images/default-avatar.png"
@@ -60,7 +60,7 @@
                                     <%= personalInfo.getFirstName() %>
                                         <%= personalInfo.getLastName() %>
                                 </h2>
-                                <p class="text-gray-500">Software Engineer</p>
+                                <p class="text-gray-500" id="positionLabel">Loading...</p>
                             </div>
                         </div>
 
