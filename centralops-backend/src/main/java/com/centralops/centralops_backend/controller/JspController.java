@@ -20,28 +20,36 @@ public class JspController {
         this.service = service;
     }
 
-    @GetMapping("/login")
-    public String loginPage(HttpSession session) {
-        if (session.getAttribute("user") != null) {
+    @GetMapping({ "/", "/login" })
+    public String showLogin(HttpSession session) {
+        // If already logged in, go straight to profile/dashboard
+        if (session.getAttribute("currentUser") != null) {
             return "redirect:/profile";
         }
-        return "login";
+        return "login"; // renders login.jsp
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/login"; 
+        return "redirect:/login";
     }
 
     @GetMapping("/dashboard")
-    public String dashboardPage() {
+    public String dashboardPage(HttpSession session) {
+        if (session.getAttribute("currentUser") == null) {
+            return "redirect:/login";
+        }
         return "dashboard";
     }
 
     @GetMapping("/profile")
-    public String profilePage(Model model) {
-        model.addAttribute("username", "admin");
+    public String profilePage(HttpSession session, Model model) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("username", currentUser.getUsername());
         return "profile";
     }
 
@@ -50,11 +58,15 @@ public class JspController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "") String search,
             @RequestParam(defaultValue = "") String role,
+            HttpSession session,
             Model model) {
+
+        if (session.getAttribute("currentUser") == null) {
+            return "redirect:/login";
+        }
 
         int pageSize = 10;
 
-        // Get filtered users
         List<User> users = service.getFilteredUsers(page, pageSize, search, role);
         long totalUsers = service.countFilteredUsers(search, role);
         int totalPages = (int) Math.ceil((double) totalUsers / pageSize);
@@ -64,7 +76,7 @@ public class JspController {
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("totalUsers", totalUsers);
 
-        return "user-list"; 
+        return "user-list";
     }
 
 }
