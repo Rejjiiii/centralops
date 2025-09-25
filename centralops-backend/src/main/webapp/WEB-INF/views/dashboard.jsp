@@ -1,4 +1,14 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+         import="com.centralops.centralops_backend.model.User,com.centralops.centralops_backend.model.PersonalInfo" %>
+<%
+    User currentUser = (User) session.getAttribute("currentUser");
+    PersonalInfo personalInfo = (PersonalInfo) session.getAttribute("personalInfo");
+
+    if (currentUser == null || currentUser.getEmpId() == null) {
+        response.sendRedirect(request.getContextPath() + "/login");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -32,8 +42,9 @@
             </div>
 
             <!-- Page Content -->
-            <h1 class="text-2xl font-bold text-gray-800">Welcome Back, John Doe!</h1>
+            <h1 class="text-2xl font-bold text-gray-800">Welcome Back, <%= personalInfo.getFirstName() %> <%= personalInfo.getLastName() %>!</h1>
             <p class="text-gray-600">Here's what's happening with your account today.</p>
+
         </main>
     </div>
 </body>

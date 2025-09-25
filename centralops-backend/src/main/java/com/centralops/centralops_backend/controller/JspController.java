@@ -30,8 +30,8 @@ public class JspController {
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate(); // clear session
-        return "redirect:/login"; // redirect to login page
+        session.invalidate();
+        return "redirect:/login"; 
     }
 
     @GetMapping("/dashboard")
@@ -42,7 +42,7 @@ public class JspController {
     @GetMapping("/profile")
     public String profilePage(Model model) {
         model.addAttribute("username", "admin");
-        return "profile";// loads profile.jsp
+        return "profile";
     }
 
     @GetMapping("/user-list")
@@ -52,7 +52,7 @@ public class JspController {
             @RequestParam(defaultValue = "") String role,
             Model model) {
 
-        int pageSize = 10; // number of users per page
+        int pageSize = 10;
 
         // Get filtered users
         List<User> users = service.getFilteredUsers(page, pageSize, search, role);
@@ -64,7 +64,7 @@ public class JspController {
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("totalUsers", totalUsers);
 
-        return "user-list"; // JSP page: user-list.jsp
+        return "user-list"; 
     }
 
 }
