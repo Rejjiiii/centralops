@@ -1,11 +1,28 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../redux/auth/authSlice"; // adjust path
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [username, setUsername] = useState(""); // <-- changed from email
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const dispatch = useDispatch();
+  const { loading, error, isAuthenticated, user } = useSelector(
+    (state) => state.auth
+  );
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(loginUser({ username, password })); // send username, not email
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <div className="flex min-h-screen">
+        {/* Left Image */}
         <div className="w-[60%]">
           <img
             src="../src/assets/coding-pov.png"
@@ -13,6 +30,8 @@ export const Login = () => {
             className="w-full h-full"
           />
         </div>
+
+        {/* Right Login Form */}
         <div className="w-[40%] m-auto items-center justify-center">
           <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -36,26 +55,31 @@ export const Login = () => {
             </div>
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-              <form action="#" method="POST" className="space-y-7">
+              <form onSubmit={handleSubmit} className="space-y-7">
+                {/* Username */}
                 <div>
                   <label
-                    htmlFor="email"
+                    htmlFor="username"
                     className="block text-sm/6 font-medium text-gray-900"
                   >
-                    Email address
+                    Username
                   </label>
                   <div className="mt-2">
                     <input
-                      id="email"
-                      name="email"
-                      type="email"
+                      id="username"
+                      name="username"
+                      type="text"
                       required
-                      autoComplete="email"
+                      autoComplete="username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
                       className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-black outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                      placeholder="Enter your username"
                     />
                   </div>
                 </div>
 
+                {/* Password */}
                 <div>
                   <div className="flex items-center justify-between">
                     <label
@@ -72,7 +96,10 @@ export const Login = () => {
                       type={showPassword ? "text" : "password"}
                       required
                       autoComplete="current-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-black outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                      placeholder="••••••••"
                     />
                     <button
                       type="button"
@@ -83,10 +110,14 @@ export const Login = () => {
                     </button>
                   </div>
                 </div>
+
+                {/* Remember me */}
                 <div className="flex inset-0 text-sm justify-between items-center">
                   <div className="flex space-x-2 items-center">
                     <input
                       type="checkbox"
+                      checked={rememberMe}
+                      onChange={() => setRememberMe((prev) => !prev)}
                       className="bg-white/10 border rounded-2xl"
                     />
                     <p>Remember me?</p>
@@ -100,14 +131,22 @@ export const Login = () => {
                   </a>
                 </div>
 
+                {/* Submit */}
                 <div>
                   <button
                     type="submit"
+                    disabled={loading}
                     className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
                   >
-                    Sign in
+                    {loading ? "Logging in..." : "Sign in"}
                   </button>
                 </div>
+
+                {/* Error / Success */}
+                {error && <p className="text-red-500 text-sm">{error}</p>}
+                {isAuthenticated && (
+                  <p className="text-green-500 text-sm">Logged in as {user}</p>
+                )}
               </form>
             </div>
           </div>
