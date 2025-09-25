@@ -36,23 +36,6 @@
                 <div class="text-center mb-8">
                     <h1 class="text-3xl font-bold text-white mb-2">Welcome Back</h1>
                 </div>
-                <div class="mb-6">
-                    <div id="imagePreviewContainer" class="hidden mt-4 flex justify-center">
-                        <div class="relative">
-                            <img id="imagePreview"
-                                class="image-preview w-32 h-32 rounded-full object-cover border-4 border-white/30"
-                                src="" alt="Preview">
-                            <div class="absolute -bottom-2 -right-2 bg-indigo-500 rounded-full p-2 shadow-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Additional Fields -->
                 <div class="space-y-4">

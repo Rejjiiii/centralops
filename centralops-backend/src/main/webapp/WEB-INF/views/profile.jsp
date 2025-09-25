@@ -45,11 +45,16 @@
                     <!-- Profile Section -->
                     <div class="bg-white shadow rounded-lg p-6 mb-6">
                         <div class="flex items-center space-x-6">
-                            <img class="w-40 h-40 rounded-full object-cover" src="<%= (currentUser.getImgSrc() != null && !currentUser.getImgSrc().isEmpty())
+                            <!-- Used Profile in DB -->
+                            <!-- <img class="w-40 h-40 rounded-full object-cover" src="<%= (currentUser.getImgSrc() != null && !currentUser.getImgSrc().isEmpty())
                                 ? currentUser.getImgSrc() 
                                 : request.getContextPath() + "/resources/images/default-avatar.png" %>"
-                                alt="<%= currentUser.getImgSrc()%>">
-
+                                alt="Default Avatar"> -->
+                            
+                            <!-- Used Defaul Profile  -->
+                            <img class="w-40 h-40 rounded-full object-cover"
+                                src="<%= request.getContextPath() %>/resources/images/default-avatar.png"
+                                alt="Default Avatar">
                             <div>
                                 <h2 class="text-2xl font-bold text-gray-800">
                                     <%= personalInfo.getFirstName() %>
