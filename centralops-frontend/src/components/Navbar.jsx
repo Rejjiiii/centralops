@@ -17,8 +17,8 @@ import { useNavigate, Link } from "react-router-dom"; // ✅ use Link
 const navItems = [
   { name: "Profile", href: "/Dashboard" },
   { name: "Employee List", href: "/EmployeeList" },
-  { name: "Projects", href: "/ProjectList" },
-  { name: "Calendar", href: "/Calendar" },
+//  { name: "Projects", href: "/ProjectList" },
+//  { name: "Calendar", href: "/Calendar" },
 ];
 
 function classNames(...classes) {

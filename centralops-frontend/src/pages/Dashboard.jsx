@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Mail,
@@ -16,6 +21,7 @@ import {
 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 
+// Redux slices
 import {
   fetchPersonalInfo,
   clearPersonalInfo,
@@ -27,14 +33,18 @@ import { fetchSection, clearSection } from "@/redux/sectionSlice";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
+
+  // Auth state
   const { user, isAuthenticated } = useSelector((state) => state.auth);
 
+  // Personal Info
   const {
     data: personalInfo,
     loading: loadingPersonal,
     error: errorPersonal,
   } = useSelector((state) => state.personalInfo);
 
+  // Related info
   const { name: departmentName, loading: loadingDepartment } = useSelector(
     (state) => state.department
   );
@@ -48,6 +58,7 @@ export default function Dashboard() {
     (state) => state.section
   );
 
+  /*  Effects */
   // Fetch personal info on mount
   useEffect(() => {
     if (user?.empId) dispatch(fetchPersonalInfo(user.empId));
@@ -61,11 +72,10 @@ export default function Dashboard() {
     };
   }, [dispatch, user?.empId]);
 
-  // Fetch related data once personalInfo loads and IDs are not empty
+  // Fetch related data once personalInfo loads
   useEffect(() => {
     if (personalInfo?.deptId) dispatch(fetchDepartment(personalInfo.deptId));
-    if (personalInfo?.positionId)
-      dispatch(fetchPosition(personalInfo.positionId));
+    if (personalInfo?.positionId) dispatch(fetchPosition(personalInfo.positionId));
     if (personalInfo?.roleId) dispatch(fetchRole(personalInfo.roleId));
     if (personalInfo?.sectionId) dispatch(fetchSection(personalInfo.sectionId));
   }, [
@@ -76,6 +86,8 @@ export default function Dashboard() {
     personalInfo?.sectionId,
   ]);
 
+
+   /*  Helpers */
   if (!isAuthenticated || !user) {
     return (
       <div className="p-6">
@@ -102,9 +114,12 @@ export default function Dashboard() {
 
   const loadingPlaceholder = <span className="text-gray-400">Loading...</span>;
 
+
+   /*  Render*/
   return (
     <div className="bg-[#D9E1F1] text-foreground">
       <Navbar />
+
       <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:grid-rows-4 gap-4 max-w-7xl mx-auto mt-11 pb-10">
         {/* Profile Card */}
         <Card className="lg:row-span-3 lg:col-span-1 rounded-2xl shadow-lg h-full flex flex-col">
@@ -114,6 +129,7 @@ export default function Dashboard() {
               alt={personalInfo?.username || "User"}
               className="w-32 h-32 md:w-36 md:h-36 rounded-full shadow-md border-4 border-white bg-contain"
             />
+
             <CardTitle className="mt-4 text-lg md:text-xl font-semibold text-center">
               {personalInfo?.username ||
                 `${personalInfo?.firstName || user?.firstName || ""} ${
@@ -148,17 +164,14 @@ export default function Dashboard() {
                   <IdCard size={16} className="text-gray-500" />
                   {user.empId || "-"}
                 </div>
-
                 <div className="text-xs md:text-sm text-gray-600 flex items-center gap-2">
                   <Mail size={16} className="text-gray-500" />
                   {personalInfo?.email || "(no email)"}
                 </div>
-
                 <div className="text-xs md:text-sm text-gray-600 flex items-center gap-2">
                   <Phone size={16} className="text-gray-500" />
                   {personalInfo?.phone || "(no phone)"}
                 </div>
-
                 <div className="text-xs md:text-sm text-gray-600 flex items-center gap-2">
                   <ClipboardList size={16} className="text-gray-500" />
                   Dept:{" "}
@@ -166,22 +179,23 @@ export default function Dashboard() {
                     ? loadingPlaceholder
                     : departmentName || personalInfo?.deptId || "-"}
                 </div>
-
                 <div className="text-xs md:text-sm text-gray-600 flex items-center gap-2">
                   <Briefcase size={16} className="text-gray-500" />
                   Position:{" "}
-                  {loadingPosition ? loadingPlaceholder : positionName || "-"}
+                  {loadingPosition
+                    ? loadingPlaceholder
+                    : positionName || "-"}
                 </div>
-
                 <div className="text-xs md:text-sm text-gray-600 flex items-center gap-2">
                   <Award size={16} className="text-gray-500" />
                   Role: {loadingRole ? loadingPlaceholder : roleName || "-"}
                 </div>
-
                 <div className="text-xs md:text-sm text-gray-600 flex items-center gap-2">
                   <MapPin size={16} className="text-gray-500" />
                   Section:{" "}
-                  {loadingSection ? loadingPlaceholder : sectionName || "-"}
+                  {loadingSection
+                    ? loadingPlaceholder
+                    : sectionName || "-"}
                 </div>
               </>
             )}
@@ -194,12 +208,9 @@ export default function Dashboard() {
             <div className="flex items-center gap-2">
               <div>
                 <div className="relative text-sm text-center font-semibold">
-                  <CheckSquare size={18} className="absolute ml-5" />
-                  Tasks
+                  <CheckSquare size={18} className="absolute ml-5" /> Tasks
                 </div>
-                <div className="text-xs text-gray-400">
-                  Pending & in-progress
-                </div>
+                <div className="text-xs text-gray-400">Pending & in-progress</div>
               </div>
             </div>
             <div className="text-xs text-gray-500">
@@ -250,9 +261,7 @@ export default function Dashboard() {
           <CardHeader className="flex items-center gap-2 p-4">
             <Award size={18} />
             <div>
-              <div className="text-sm text-center font-semibold">
-                Performance
-              </div>
+              <div className="text-sm text-center font-semibold">Performance</div>
               <div className="text-xs text-gray-400">Last review & rating</div>
             </div>
           </CardHeader>
@@ -347,3 +356,4 @@ export default function Dashboard() {
     </div>
   );
 }
+

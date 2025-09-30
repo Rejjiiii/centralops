@@ -3,9 +3,9 @@ import axios from "axios";
 
 export const fetchPosition = createAsyncThunk(
   "position/fetchPosition",
-  async (positionId, thunkAPI) => {
+  async (thunkAPI) => {
     try {
-      const response = await axios.get(`/api/pos/${positionId}`);
+      const response = await axios.get(`/api/pos`);
       return response.data; // positionName
     } catch (error) {
       return thunkAPI.rejectWithValue(

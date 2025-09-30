@@ -9,6 +9,7 @@ import departmentReducer from "@/redux/departmentSlice";
 import positionReducer from "@/redux/positionSlice";
 import roleReducer from "@/redux/roleSlice";
 import sectionReducer from "@/redux/sectionSlice";
+import employeeReducer from "@/redux/employeeSlice";
 
 // Persist config for auth only
 const persistConfig = {
@@ -26,6 +27,7 @@ export const store = configureStore({
     position: positionReducer,
     role: roleReducer,
     section: sectionReducer,
+    employees: employeeReducer,        // non-persisted
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

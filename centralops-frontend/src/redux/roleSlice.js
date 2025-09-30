@@ -3,9 +3,9 @@ import axios from "axios";
 
 export const fetchRole = createAsyncThunk(
   "role/fetchRole",
-  async (roleId, thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
-      const response = await axios.get(`/api/role/${roleId}`);
+      const response = await axios.get(`/api/role/`);
       return response.data; // roleName
     } catch (error) {
       return thunkAPI.rejectWithValue(

@@ -4,8 +4,8 @@ import { NotFound } from "./pages/NotFound";
 import { Login } from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import EmployeeList from "./pages/EmployeeList";
-import ProjectList from "./pages/ProjectList";
-import ProtectedRoute from "./components/ProtectedRoute"; // ✅ import
+//import ProjectList from "./pages/ProjectList";
+import ProtectedRoute from "./components/ProtectedRoute"; //  import
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         {/* Default route → Login */}
         <Route path="/" element={<Login />} />
 
-        {/* ✅ Wrap protected pages */}
+        {/*  Wrap protected pages */}
         <Route
           path="/Dashboard"
           element={
@@ -31,14 +31,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
+        {/* <Route
           path="/ProjectList"
           element={
             <ProtectedRoute>
               <ProjectList />
             </ProtectedRoute>
           }
-        />
+        /> */}
 
         <Route path="*" element={<NotFound />} />
       </Routes>
