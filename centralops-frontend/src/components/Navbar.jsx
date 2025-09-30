@@ -15,8 +15,9 @@ import { persistor } from "../redux/app/store";   // ✅ to clear persisted stor
 import { useNavigate, Link } from "react-router-dom"; // ✅ use Link
 
 const navItems = [
-  { name: "Profile", href: "/Dashboard" },
+  { name: "Dashboard", href: "/Dashboard" },
   { name: "Employee List", href: "/EmployeeList" },
+  { name: "Profile", href: "/Profile" },
 //  { name: "Projects", href: "/ProjectList" },
 //  { name: "Calendar", href: "/Calendar" },
 ];

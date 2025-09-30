@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import EmployeeList from "./pages/EmployeeList";
 //import ProjectList from "./pages/ProjectList";
 import ProtectedRoute from "./components/ProtectedRoute"; //  import
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -28,6 +29,14 @@ function App() {
           element={
             <ProtectedRoute>
               <EmployeeList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />
