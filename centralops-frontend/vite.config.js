@@ -14,6 +14,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@redux": path.resolve(__dirname, "./src/redux/store"),
+      "@store": path.resolve(__dirname, "./src/redux"),
     },
   },
   server: {

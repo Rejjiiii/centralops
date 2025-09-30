@@ -1,16 +1,50 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import {
+  fetchDepartment,
+  fetchSection,
+  fetchRole,
+  fetchPosition,
+} from "../metaSlice"; // import meta thunks
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ username, password }, thunkAPI) => {
     try {
+      // Step 1: login via existing endpoint
       const response = await axios.post(
-        "/api/auth/login", // backend login endpoint
+        "/api/auth/login",
         { username, password },
-        { withCredentials: true } // keep cookies/session if backend uses them
+        { withCredentials: true }
       );
-      return response.data;
+
+      const loginUserData = response.data;
+
+      if (!loginUserData?.empId) {
+        return thunkAPI.rejectWithValue("Invalid login response");
+      }
+
+      const empId = loginUserData.empId;
+
+      // Step 2: fetch full user info by empId
+      const userResponse = await axios.get(`/api/users/${empId}`);
+      const fullUser = userResponse.data;
+
+      // Step 3: merge full name and email from loginUserData into fullUser
+      const mergedUser = {
+        ...fullUser,
+        firstName: loginUserData.firstName || fullUser.firstName,
+        lastName: loginUserData.lastName || fullUser.lastName,
+        email: loginUserData.email || fullUser.email,
+      };
+
+      // Step 4: fetch meta info if available
+      if (mergedUser.deptId) thunkAPI.dispatch(fetchDepartment(mergedUser.deptId));
+      if (mergedUser.sectionId) thunkAPI.dispatch(fetchSection(mergedUser.sectionId));
+      if (mergedUser.roleId) thunkAPI.dispatch(fetchRole(mergedUser.roleId));
+      if (mergedUser.positionId) thunkAPI.dispatch(fetchPosition(mergedUser.positionId));
+
+      return mergedUser;
     } catch (error) {
       const message =
         error.response?.data?.message || "Something went wrong during login";
@@ -20,7 +54,7 @@ export const loginUser = createAsyncThunk(
 );
 
 const initialState = {
-  user: null,          // full employee object
+  user: null,
   loading: false,
   error: null,
   isAuthenticated: false,
@@ -44,14 +78,8 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-
-        // check if backend returned a valid employee object
-        if (action.payload?.empId) {
-          state.user = action.payload; // save the whole employee object
-          state.isAuthenticated = true;
-        } else {
-          state.error = action.payload?.message || "Invalid login response";
-        }
+        state.user = action.payload;
+        state.isAuthenticated = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;

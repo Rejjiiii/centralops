@@ -15,10 +15,11 @@ import { persistor } from "../redux/app/store";   // ✅ to clear persisted stor
 import { useNavigate, Link } from "react-router-dom"; // ✅ use Link
 
 const navItems = [
-  { name: "Profile", href: "/Dashboard" },
+  { name: "Dashboard", href: "/Dashboard" },
   { name: "Employee List", href: "/EmployeeList" },
-  { name: "Projects", href: "/ProjectList" },
-  { name: "Calendar", href: "/Calendar" },
+  { name: "Profile", href: "/Profile" },
+//  { name: "Projects", href: "/ProjectList" },
+//  { name: "Calendar", href: "/Calendar" },
 ];
 
 function classNames(...classes) {
@@ -111,7 +112,7 @@ export const Navbar = () => {
                 <span className="sr-only">Open user menu</span>
                 <img
                   alt="User Avatar"
-                  src="../src/assets/DP.png"
+                  src="../src/assets/Default.jpg"
                   className="size-10 rounded-full object-cover bg-gray-800 outline -outline-offset-1 outline-white/10"
                 />
               </MenuButton>
