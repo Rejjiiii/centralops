@@ -1,11 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Mail,
@@ -21,15 +16,19 @@ import {
 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 
-// Redux slices
+// ✅ Import meta thunks
 import {
   fetchPersonalInfo,
   clearPersonalInfo,
-} from "@/redux/personalInfoSlice";
-import { fetchDepartment, clearDepartment } from "@/redux/departmentSlice";
-import { fetchPosition, clearPosition } from "@/redux/positionSlice";
-import { fetchRole, clearRole } from "@/redux/roleSlice";
-import { fetchSection, clearSection } from "@/redux/sectionSlice";
+  fetchDepartment,
+  clearDepartment,
+  fetchPosition,
+  clearPosition,
+  fetchRole,
+  clearRole,
+  fetchSection,
+  clearSection,
+} from "@/redux/metaSlice";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -37,28 +36,21 @@ export default function Dashboard() {
   // Auth state
   const { user, isAuthenticated } = useSelector((state) => state.auth);
 
-  // Personal Info
+  // Meta state
   const {
-    data: personalInfo,
-    loading: loadingPersonal,
-    error: errorPersonal,
-  } = useSelector((state) => state.personalInfo);
+    personalInfo: {
+      data: personalInfo,
+      loading: loadingPersonal,
+      error: errorPersonal,
+    },
+    department,
+    position,
+    role,
+    section,
+  } = useSelector((state) => state.meta);
 
-  // Related info
-  const { name: departmentName, loading: loadingDepartment } = useSelector(
-    (state) => state.department
-  );
-  const { name: positionName, loading: loadingPosition } = useSelector(
-    (state) => state.position
-  );
-  const { name: roleName, loading: loadingRole } = useSelector(
-    (state) => state.role
-  );
-  const { name: sectionName, loading: loadingSection } = useSelector(
-    (state) => state.section
-  );
+  const loadingPlaceholder = <span className="text-gray-400">Loading...</span>;
 
-  /*  Effects */
   // Fetch personal info on mount
   useEffect(() => {
     if (user?.empId) dispatch(fetchPersonalInfo(user.empId));
@@ -72,10 +64,11 @@ export default function Dashboard() {
     };
   }, [dispatch, user?.empId]);
 
-  // Fetch related data once personalInfo loads
+  // Fetch department/role/section/position once personal info is loaded
   useEffect(() => {
     if (personalInfo?.deptId) dispatch(fetchDepartment(personalInfo.deptId));
-    if (personalInfo?.positionId) dispatch(fetchPosition(personalInfo.positionId));
+    if (personalInfo?.positionId)
+      dispatch(fetchPosition(personalInfo.positionId));
     if (personalInfo?.roleId) dispatch(fetchRole(personalInfo.roleId));
     if (personalInfo?.sectionId) dispatch(fetchSection(personalInfo.sectionId));
   }, [
@@ -86,8 +79,18 @@ export default function Dashboard() {
     personalInfo?.sectionId,
   ]);
 
+  // Map IDs to names
+  const departmentName = personalInfo?.deptId
+    ? department.map[personalInfo.deptId]
+    : null;
+  const positionName = personalInfo?.positionId
+    ? position.map[personalInfo.positionId]
+    : null;
+  const roleName = personalInfo?.roleId ? role.map[personalInfo.roleId] : null;
+  const sectionName = personalInfo?.sectionId
+    ? section.map[personalInfo.sectionId]
+    : null;
 
-   /*  Helpers */
   if (!isAuthenticated || !user) {
     return (
       <div className="p-6">
@@ -97,7 +100,7 @@ export default function Dashboard() {
     );
   }
 
-  const avatarSrc = personalInfo?.imgSrc || "../src/assets/DP.png";
+  const avatarSrc = personalInfo?.imgSrc || "../src/assets/Default.jpg";
 
   const statCard = (icon, title, value, hint) => (
     <Card className="p-3 rounded-lg">
@@ -112,10 +115,6 @@ export default function Dashboard() {
     </Card>
   );
 
-  const loadingPlaceholder = <span className="text-gray-400">Loading...</span>;
-
-
-   /*  Render*/
   return (
     <div className="bg-[#D9E1F1] text-foreground">
       <Navbar />
@@ -127,7 +126,7 @@ export default function Dashboard() {
             <img
               src={avatarSrc}
               alt={personalInfo?.username || "User"}
-              className="w-32 h-32 md:w-36 md:h-36 rounded-full shadow-md border-4 border-white bg-contain"
+              className="w-32 h-32 md:w-36 md:h-36 rounded-full shadow-md border-4 border-white"
             />
 
             <CardTitle className="mt-4 text-lg md:text-xl font-semibold text-center">
@@ -175,27 +174,23 @@ export default function Dashboard() {
                 <div className="text-xs md:text-sm text-gray-600 flex items-center gap-2">
                   <ClipboardList size={16} className="text-gray-500" />
                   Dept:{" "}
-                  {loadingDepartment
+                  {department.loading
                     ? loadingPlaceholder
-                    : departmentName || personalInfo?.deptId || "-"}
+                    : departmentName || "-"}
                 </div>
                 <div className="text-xs md:text-sm text-gray-600 flex items-center gap-2">
                   <Briefcase size={16} className="text-gray-500" />
                   Position:{" "}
-                  {loadingPosition
-                    ? loadingPlaceholder
-                    : positionName || "-"}
+                  {position.loading ? loadingPlaceholder : positionName || "-"}
                 </div>
                 <div className="text-xs md:text-sm text-gray-600 flex items-center gap-2">
                   <Award size={16} className="text-gray-500" />
-                  Role: {loadingRole ? loadingPlaceholder : roleName || "-"}
+                  Role: {role.loading ? loadingPlaceholder : roleName || "-"}
                 </div>
                 <div className="text-xs md:text-sm text-gray-600 flex items-center gap-2">
                   <MapPin size={16} className="text-gray-500" />
                   Section:{" "}
-                  {loadingSection
-                    ? loadingPlaceholder
-                    : sectionName || "-"}
+                  {section.loading ? loadingPlaceholder : sectionName || "-"}
                 </div>
               </>
             )}
@@ -210,7 +205,9 @@ export default function Dashboard() {
                 <div className="relative text-sm text-center font-semibold">
                   <CheckSquare size={18} className="absolute ml-5" /> Tasks
                 </div>
-                <div className="text-xs text-gray-400">Pending & in-progress</div>
+                <div className="text-xs text-gray-400">
+                  Pending & in-progress
+                </div>
               </div>
             </div>
             <div className="text-xs text-gray-500">
@@ -261,7 +258,9 @@ export default function Dashboard() {
           <CardHeader className="flex items-center gap-2 p-4">
             <Award size={18} />
             <div>
-              <div className="text-sm text-center font-semibold">Performance</div>
+              <div className="text-sm text-center font-semibold">
+                Performance
+              </div>
               <div className="text-xs text-gray-400">Last review & rating</div>
             </div>
           </CardHeader>
@@ -342,7 +341,7 @@ export default function Dashboard() {
           {statCard(
             <Briefcase size={18} />,
             "Dept",
-            loadingDepartment
+            department.loading
               ? loadingPlaceholder
               : departmentName || personalInfo?.deptId || "-"
           )}
@@ -356,4 +355,3 @@ export default function Dashboard() {
     </div>
   );
 }
-

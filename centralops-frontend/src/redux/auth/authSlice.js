@@ -1,16 +1,36 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import {
+  fetchPersonalInfo,
+  fetchDepartment,
+  fetchSection,
+  fetchRole,
+  fetchPosition,
+} from "../metaSlice"; // import meta thunks
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ username, password }, thunkAPI) => {
     try {
       const response = await axios.post(
-        "/api/auth/login", // backend login endpoint
+        "/api/auth/login",
         { username, password },
-        { withCredentials: true } // keep cookies/session if backend uses them
+        { withCredentials: true }
       );
-      return response.data;
+
+      const user = response.data;
+
+      if (user?.empId) {
+        // Automatically fetch related data
+        thunkAPI.dispatch(fetchPersonalInfo(user.empId));
+
+        if (user.deptId) thunkAPI.dispatch(fetchDepartment(user.deptId));
+        if (user.sectionId) thunkAPI.dispatch(fetchSection(user.sectionId));
+        if (user.roleId) thunkAPI.dispatch(fetchRole(user.roleId));
+        if (user.positionId) thunkAPI.dispatch(fetchPosition(user.positionId));
+      }
+
+      return user;
     } catch (error) {
       const message =
         error.response?.data?.message || "Something went wrong during login";
@@ -20,7 +40,7 @@ export const loginUser = createAsyncThunk(
 );
 
 const initialState = {
-  user: null,          // full employee object
+  user: null,
   loading: false,
   error: null,
   isAuthenticated: false,
@@ -44,10 +64,8 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-
-        // check if backend returned a valid employee object
         if (action.payload?.empId) {
-          state.user = action.payload; // save the whole employee object
+          state.user = action.payload;
           state.isAuthenticated = true;
         } else {
           state.error = action.payload?.message || "Invalid login response";

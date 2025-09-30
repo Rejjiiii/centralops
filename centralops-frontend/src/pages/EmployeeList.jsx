@@ -1,9 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEmployees } from "@/redux/employeeSlice";
-import { fetchRole } from "@/redux/roleSlice";
-import { fetchPosition } from "@/redux/positionSlice";
-import { fetchDepartment } from "@/redux/departmentSlice";
+import {
+  fetchEmployees,
+  fetchRole,
+  fetchPosition,
+  fetchDepartment,
+} from "@/redux/metaSlice"; // ✅ unified slice
 import { Search, Plus, MoreVertical, Users, ArrowUpDown } from "lucide-react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,13 +13,14 @@ import { Navbar } from "@/components/Navbar";
 
 export default function EmployeeList() {
   const dispatch = useDispatch();
-  const { list: employees, loading, error } = useSelector(
-    (state) => state.employees
-  );
 
-  const roleState = useSelector((state) => state.role);
-  const positionState = useSelector((state) => state.position);
-  const departmentState = useSelector((state) => state.department);
+  // ✅ unified slice state
+  const {
+    employees: { list: employees, loading, error },
+    role,
+    position,
+    department,
+  } = useSelector((state) => state.meta);
 
   // Local state
   const [filteredEmployees, setFilteredEmployees] = useState([]);
@@ -33,14 +36,22 @@ export default function EmployeeList() {
     dispatch(fetchEmployees());
   }, [dispatch]);
 
-  // Fetch role, position, and department dynamically
+  // ✅ Fetch unique role/position/department IDs for current employees
   useEffect(() => {
-    employees.forEach((e) => {
-      if (e.roleId) dispatch(fetchRole(e.roleId));
-      if (e.positionId) dispatch(fetchPosition(e.positionId));
-      if (e.deptId) dispatch(fetchDepartment(e.deptId));
+    const uniqueRoleIds = [...new Set(employees.map((e) => e.roleId))];
+    const uniquePositionIds = [...new Set(employees.map((e) => e.positionId))];
+    const uniqueDeptIds = [...new Set(employees.map((e) => e.deptId))];
+
+    uniqueRoleIds.forEach((id) => {
+      if (id && !role.map[id]) dispatch(fetchRole(id));
     });
-  }, [dispatch, employees]);
+    uniquePositionIds.forEach((id) => {
+      if (id && !position.map[id]) dispatch(fetchPosition(id));
+    });
+    uniqueDeptIds.forEach((id) => {
+      if (id && !department.map[id]) dispatch(fetchDepartment(id));
+    });
+  }, [dispatch, employees, role.map, position.map, department.map]);
 
   // Filter based on search term
   useEffect(() => {
@@ -77,8 +88,7 @@ export default function EmployeeList() {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const toggleDropdown = (id) =>
@@ -127,9 +137,9 @@ export default function EmployeeList() {
                   />
                 </div>
 
-                <Button className="rounded-xl text-sm flex items-center">
+                {/* <Button className="rounded-xl text-sm flex items-center">
                   <Plus className="h-4 w-4 mr-1" /> Add Employee
-                </Button>
+                </Button> */}
 
                 <Button
                   variant="outline"
@@ -174,13 +184,13 @@ export default function EmployeeList() {
                         <span>{e.username}</span>
                       </div>
                       <div className="md:flex hidden">
-                        {positionState.name || "Unknown"}
+                        {position.map[e.positionId] || "Unknown"}
                       </div>
                       <div className="md:flex hidden">
-                        {departmentState.name || "Unknown"}
+                        {department.map[e.deptId] || "Unknown"}
                       </div>
                       <div className="md:flex hidden">
-                        {roleState.name || "Unknown"}
+                        {role.map[e.roleId] || "Unknown"}
                       </div>
                       <div
                         className="flex justify-end items-center gap-2 relative"
@@ -244,7 +254,9 @@ export default function EmployeeList() {
           <Card className="col-span-1 rounded-2xl shadow-md flex flex-col">
             <CardHeader className="p-6">
               <div className="text-lg font-semibold">Employee Summary</div>
-              <div className="text-xs text-gray-500">Quick stats & insights</div>
+              <div className="text-xs text-gray-500">
+                Quick stats & insights
+              </div>
             </CardHeader>
             <CardContent className="p-6 space-y-4">
               <div className="text-sm">
@@ -269,8 +281,6 @@ export default function EmployeeList() {
     </div>
   );
 }
-
-
 
 // import { useEffect, useState, useRef } from "react";
 // import { useDispatch, useSelector } from "react-redux";

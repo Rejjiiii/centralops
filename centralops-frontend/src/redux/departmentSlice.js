@@ -57,15 +57,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// Fetch department name by ID, only if deptId is valid
+// Fetch department name by ID
 export const fetchDepartment = createAsyncThunk(
   "department/fetchDepartment",
   async (deptId, thunkAPI) => {
-    if (!deptId) return ""; // Return empty string immediately if invalid
+    if (!deptId) return "";
 
     try {
       const response = await axios.get(`/api/dept/${deptId}`);
-      return response.data; // deptName
+      console.log("API /dept response:", response.data); // 👀 debug log
+      return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Error fetching department"
@@ -98,7 +99,15 @@ const departmentSlice = createSlice({
       })
       .addCase(fetchDepartment.fulfilled, (state, action) => {
         state.loading = false;
-        state.name = action.payload || "-"; // fallback if empty string
+
+        // Handle both formats (string or object)
+        if (typeof action.payload === "string") {
+          state.name = action.payload;
+        } else if (typeof action.payload === "object") {
+          state.name = action.payload?.name || "-";
+        } else {
+          state.name = "-";
+        }
       })
       .addCase(fetchDepartment.rejected, (state, action) => {
         state.loading = false;
@@ -109,3 +118,4 @@ const departmentSlice = createSlice({
 
 export const { clearDepartment } = departmentSlice.actions;
 export default departmentSlice.reducer;
+

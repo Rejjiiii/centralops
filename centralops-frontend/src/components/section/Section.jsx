@@ -1,7 +1,7 @@
-export const Section = () => {
-    return (
-        <div>
-            <h2>Hello World</h2>
-        </div>
-    )
-}
+import React from "react";
+
+const Section = () => {
+  return <div></div>;
+};
+
+export default StatCard;

@@ -7,6 +7,7 @@ export const fetchPersonalInfo = createAsyncThunk(
   async (empId, thunkAPI) => {
     try {
       const response = await axios.get(`/api/per-info/${empId}`);
+      console.log("PersonalInfo API response:", response.data); // 👀 debug log
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -18,20 +19,20 @@ export const fetchPersonalInfo = createAsyncThunk(
 
 const initialState = {
   data: {
-    empId: "",
-    username: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    deptId: "",
-    sectionId: "",
-    roleId: "",
-    positionId: "",
-    imgSrc: "",
-    regDate: "",
-    updateDate: "",
-    statusCode: "",
+    empId: null,
+    username: null,
+    firstName: null,
+    lastName: null,
+    email: null,
+    phone: null,
+    deptId: null,
+    sectionId: null,
+    roleId: null,
+    positionId: null,
+    imgSrc: null,
+    regDate: null,
+    updateDate: null,
+    statusCode: null,
     tasks: [],
     projects: [],
     performance: null,
@@ -47,7 +48,7 @@ const personalInfoSlice = createSlice({
   initialState,
   reducers: {
     clearPersonalInfo: (state) => {
-      state.data = { ...initialState.data };
+      state.data = { ...initialState.data }; // reset all fields
       state.error = null;
       state.loading = false;
     },
@@ -60,7 +61,17 @@ const personalInfoSlice = createSlice({
       })
       .addCase(fetchPersonalInfo.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = { ...state.data, ...action.payload }; // merge API data with default
+
+        // Replace with API data but preserve array/object defaults if missing
+        state.data = {
+          ...initialState.data,
+          ...action.payload,
+          tasks: action.payload?.tasks ?? [],
+          projects: action.payload?.projects ?? [],
+          performance: action.payload?.performance ?? null,
+          events: action.payload?.events ?? [],
+          activity: action.payload?.activity ?? [],
+        };
       })
       .addCase(fetchPersonalInfo.rejected, (state, action) => {
         state.loading = false;
@@ -71,6 +82,3 @@ const personalInfoSlice = createSlice({
 
 export const { clearPersonalInfo } = personalInfoSlice.actions;
 export default personalInfoSlice.reducer;
-
-
-

@@ -111,7 +111,7 @@ export const Navbar = () => {
                 <span className="sr-only">Open user menu</span>
                 <img
                   alt="User Avatar"
-                  src="../src/assets/DP.png"
+                  src="../src/assets/Default.jpg"
                   className="size-10 rounded-full object-cover bg-gray-800 outline -outline-offset-1 outline-white/10"
                 />
               </MenuButton>
