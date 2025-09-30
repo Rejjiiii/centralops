@@ -10,9 +10,9 @@ import {
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useDispatch } from "react-redux";
-import { logout } from "../redux/auth/authSlice"; // ✅ adjust path
-import { persistor } from "../redux/app/store";   // ✅ to clear persisted storage
-import { useNavigate, Link } from "react-router-dom"; // ✅ use Link
+import { logout } from "../redux/auth/authSlice"; // adjust path
+import { persistor } from "../redux/app/store";   // to clear persisted storage
+import { useNavigate, Link } from "react-router-dom"; // use Link
 
 const navItems = [
   { name: "Profile", href: "/Dashboard" },
@@ -37,9 +37,9 @@ export const Navbar = () => {
   const handleLogout = () => {
     dispatch(logout());      // clear Redux auth state
     persistor.purge();       // clear redux-persist storage
-    sessionStorage.clear();  // ✅ clear session storage (if used)
-    localStorage.clear();    // ✅ clear local storage (if used)
-    navigate("/");           // ✅ redirect to login
+    sessionStorage.clear();  // clear session storage (if used)
+    localStorage.clear();    // clear local storage (if used)
+    navigate("/");           // redirect to login
   };
 
   return (

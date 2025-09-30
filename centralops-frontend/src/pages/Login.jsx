@@ -17,7 +17,7 @@ export const Login = () => {
     (state) => state.auth
   );
 
-  // ✅ redirect when logged in
+  // redirect when logged in
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/dashboard");

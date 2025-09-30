@@ -4,4 +4,4 @@ const Section = () => {
   return <div></div>;
 };
 
-export default StatCard;
+export default Section;

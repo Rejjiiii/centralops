@@ -17,7 +17,7 @@ const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer, // persisted auth
-    meta: metaReducer,          // ✅ unified slice
+    meta: metaReducer,          // unified slice
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
