@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 
-// ✅ Import meta thunks
 import {
   fetchPersonalInfo,
   clearPersonalInfo,
@@ -64,7 +63,7 @@ export default function Dashboard() {
     };
   }, [dispatch, user?.empId]);
 
-  // Fetch department/role/section/position once personal info is loaded
+  // Fetch related meta info (department, role, etc.)
   useEffect(() => {
     if (personalInfo?.deptId) dispatch(fetchDepartment(personalInfo.deptId));
     if (personalInfo?.positionId)
@@ -79,17 +78,14 @@ export default function Dashboard() {
     personalInfo?.sectionId,
   ]);
 
-  // Map IDs to names
-  const departmentName = personalInfo?.deptId
-    ? department.map[personalInfo.deptId]
-    : null;
-  const positionName = personalInfo?.positionId
-    ? position.map[personalInfo.positionId]
-    : null;
-  const roleName = personalInfo?.roleId ? role.map[personalInfo.roleId] : null;
-  const sectionName = personalInfo?.sectionId
-    ? section.map[personalInfo.sectionId]
-    : null;
+  // Fetch meta info once after login
+  useEffect(() => {
+    if (!user) return;
+    if (user.deptId) dispatch(fetchDepartment(user.deptId));
+    if (user.positionId) dispatch(fetchPosition(user.positionId));
+    if (user.roleId) dispatch(fetchRole(user.roleId));
+    if (user.sectionId) dispatch(fetchSection(user.sectionId));
+  }, [dispatch, user]);
 
   if (!isAuthenticated || !user) {
     return (
@@ -100,7 +96,21 @@ export default function Dashboard() {
     );
   }
 
-  const avatarSrc = personalInfo?.imgSrc || "../src/assets/Default.jpg";
+  const avatarSrc = user.imgSrc || "../src/assets/Default.jpg";
+
+  const departmentName = user.deptId ? department.map[user.deptId] : "-";
+  const positionName = user.positionId ? position.map[user.positionId] : "-";
+  const roleName = user.roleId ? role.map[user.roleId] : "-";
+  const sectionName = user.sectionId ? section.map[user.sectionId] : "-";
+
+  const username =
+    `${user.firstName || ""} ${user.lastName || ""}`.trim() ||
+    user.username ||
+    "User";
+
+  const fullName = `${personalInfo?.firstName || user?.firstName || ""} ${
+    personalInfo?.lastName || user?.lastName || ""
+  }`.trim();
 
   const statCard = (icon, title, value, hint) => (
     <Card className="p-3 rounded-lg">
