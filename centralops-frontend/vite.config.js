@@ -14,6 +14,17 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@redux": path.resolve(__dirname, "./src/redux/store"),
+      "@store": path.resolve(__dirname, "./src/redux"),
+    },
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://192.168.40.127:8080",
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 });

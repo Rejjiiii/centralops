@@ -1,6 +1,6 @@
 import React from 'react'
 import { Navbar } from '../components/navbar'
-import { Section } from '../components/section/section'
+import { Section } from '../components/section/Section'
 
 export const Home = () => {
   return (
